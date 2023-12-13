@@ -7,7 +7,7 @@ import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.common.AbstractEntity;
 
 /**
- * TODO Sprint add-controllers.
+ * Пользователь.
  */
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
