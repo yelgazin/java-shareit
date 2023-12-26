@@ -1,20 +1,27 @@
 package ru.practicum.shareit.item;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.common.AbstractEntity;
+import ru.practicum.shareit.user.User;
+
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 /**
  * Вещь.
  */
-@Data
+@Getter
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@EqualsAndHashCode(callSuper = true)
+@Entity
 public class Item extends AbstractEntity {
-    Long id;
-    Long ownerId;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    User owner;
+
     String name;
     String description;
     Boolean available;

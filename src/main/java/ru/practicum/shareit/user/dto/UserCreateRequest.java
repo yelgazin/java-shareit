@@ -2,7 +2,8 @@ package ru.practicum.shareit.user.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.user.User;
 
@@ -12,7 +13,8 @@ import javax.validation.constraints.NotBlank;
 /**
  * Параметр запроса для создания {@link User}.
  */
-@Data
+@Getter
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(description = "Параметры для создания пользователя")
 public class UserCreateRequest {

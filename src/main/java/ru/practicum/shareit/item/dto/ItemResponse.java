@@ -2,14 +2,16 @@ package ru.practicum.shareit.item.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.item.Item;
 
 /**
  * Параметры ответа для {@link Item}.
  */
-@Data
+@Getter
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(description = "Параметры вещи для ответа")
 public class ItemResponse {
