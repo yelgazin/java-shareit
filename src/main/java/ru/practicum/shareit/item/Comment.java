@@ -4,30 +4,31 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
 import ru.practicum.shareit.common.AbstractEntity;
 import ru.practicum.shareit.user.User;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import java.util.Set;
+import java.time.LocalDateTime;
 
 /**
- * Вещь.
+ * Комментарий.
  */
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-public class Item extends AbstractEntity {
+public class Comment extends AbstractEntity {
 
     @ManyToOne
-    User owner;
+    User author;
 
-    String name;
-    String description;
-    Boolean available;
+    @CreationTimestamp
+    LocalDateTime created;
 
-    @OneToMany
-    Set<Comment> comments;
+    String text;
+
+    @ManyToOne
+    Item item;
 }

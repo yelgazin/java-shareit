@@ -8,6 +8,7 @@ import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.Status;
 import ru.practicum.shareit.item.dto.ItemResponse;
+import ru.practicum.shareit.user.dto.UserResponse;
 
 import java.time.LocalDateTime;
 
@@ -26,7 +27,7 @@ public class BookingResponse {
     ItemResponse item;
 
     @Schema(description = "Арендатор")
-    ItemResponse booker;
+    UserResponse booker;
 
     @Schema(description = "Статус бронирования")
     Status status;

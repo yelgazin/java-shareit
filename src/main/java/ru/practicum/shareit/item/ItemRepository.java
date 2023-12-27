@@ -13,14 +13,4 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "(lower(i.name) like lower(concat('%', :searchText, '%')) or " +
             "lower(i.description) like lower(concat('%', :searchText, '%')))")
     List<Item> findAvailableBySubstring(String searchText);
-
-//    List<Item> findByNameContainsIgnoreCaseOrDescriptionContainsIgnoreCase(String name, String description);
-
-    //List<Item> findByNameOrDescriptionContainsIgnoreCase(String text);
-
-    //@Query("SELECT t FROM Tutorial t WHERE LOWER(t.title) LIKE LOWER(CONCAT('%', :keyword,'%')) OR LOWER(t.description) LIKE LOWER(CONCAT('%', :keyword,'%'))")
-    //List<Tutorial> findByTitleContainingOrDescriptionContainingCaseInsensitive(String keyword);
-    //
-    //@Query("SELECT t FROM Tutorial t WHERE LOWER(t.title) LIKE LOWER(CONCAT('%', :title,'%')) AND t.published=:isPublished")
-    //List<Tutorial> findByTitleContainingCaseInsensitiveAndPublished(String title, boolean isPublished);
 }

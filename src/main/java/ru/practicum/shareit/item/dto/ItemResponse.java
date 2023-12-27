@@ -5,7 +5,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import ru.practicum.shareit.item.Comment;
 import ru.practicum.shareit.item.Item;
+
+import java.util.Set;
 
 /**
  * Параметры ответа для {@link Item}.
@@ -26,4 +29,7 @@ public class ItemResponse {
 
     @Schema(description = "Доступность", example = "true")
     Boolean available;
+
+    @Schema(description = "Комментарии к вещи")
+    Set<Comment> comments;
 }

@@ -1,10 +1,15 @@
 package ru.practicum.shareit.common.exception;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import ru.practicum.shareit.booking.BookingException;
+import ru.practicum.shareit.booking.UnsupportedStatusException;
 
 import javax.validation.ConstraintViolationException;
 
@@ -43,6 +48,41 @@ public class RestExceptionHandler {
         log.info(message);
         return new RestException(message, ex.getCause(), HttpStatus.FORBIDDEN);
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = {BookingException.class})
+    public RestException handleBookingException(Exception ex) {
+        String message = ex.getMessage();
+        log.info(message);
+        return new RestException(message, ex.getCause(), HttpStatus.BAD_REQUEST);
+    }
+
+    // !!!!!!!!!!!11111111
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = {MethodArgumentTypeMismatchException.class})
+    public RestException handleConversionFailedExceptionException(Exception ex) {
+        String message = ex.getMessage();
+        log.info(message);
+        return new RestException(message, ex.getCause(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = {IllegalStateException.class})
+    public RestException handleIllegalStateException(Exception ex) {
+        String message = ex.getMessage();
+        log.info(message);
+        return new RestException(message, ex.getCause(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = {UnsupportedStatusException.class})
+    public UnsupportedStatusException handleUnsupportedStatusException(UnsupportedStatusException ex) {
+        String message = ex.getMessage();
+        log.info(message);
+        return ex;
+    }
+
+    //!!!!!!!!!!!!!!!1111
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

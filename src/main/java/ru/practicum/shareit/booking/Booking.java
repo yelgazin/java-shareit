@@ -6,9 +6,7 @@ import ru.practicum.shareit.common.AbstractEntity;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.user.User;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
@@ -26,7 +24,10 @@ public class Booking extends AbstractEntity {
     @ManyToOne
     Item item;
 
+    @Enumerated(EnumType.STRING)
     Status status;
+    @Column(name = "start_time")
     LocalDateTime start;
+    @Column(name = "end_time")
     LocalDateTime end;
 }

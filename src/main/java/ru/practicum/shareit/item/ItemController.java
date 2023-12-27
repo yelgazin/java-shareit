@@ -4,10 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.item.dto.ItemConverter;
-import ru.practicum.shareit.item.dto.ItemCreateRequest;
-import ru.practicum.shareit.item.dto.ItemResponse;
-import ru.practicum.shareit.item.dto.ItemUpdateRequest;
+import ru.practicum.shareit.item.dto.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -22,10 +19,12 @@ import java.util.List;
 public class ItemController {
 
     private final ItemConverter itemConverter;
+    private final CommentConverter commentConverter;
     private final ItemService itemService;
 
     /**
      * Получение списка вещей пользователя (владельца).
+     *
      * @param userId идентификатор пользователя.
      * @return список вещей пользователя.
      */
@@ -37,8 +36,9 @@ public class ItemController {
 
     /**
      * Получение вещи по идентификатору.
+     *
      * @param userId идентификатор пользователя (не владельца).
-     * @param id идентификатор вещи.
+     * @param id     идентификатор вещи.
      * @return вещь.
      */
     @GetMapping("/{id}")
@@ -49,7 +49,8 @@ public class ItemController {
 
     /**
      * Создание вещи.
-     * @param userId идентификатор пользователя.
+     *
+     * @param userId            идентификатор пользователя.
      * @param itemCreateRequest параметры вещи.
      * @return созданная вещь.
      */
@@ -63,24 +64,26 @@ public class ItemController {
 
     /**
      * Обновление вещи.
-     * @param userId идентификатор пользователя.
-     * @param id идентификатор вещи.
+     *
+     * @param userId            идентификатор пользователя.
+     * @param id                идентификатор вещи.
      * @param itemUpdateRequest параметры для обновления.
      * @return обновленная вещь.
      */
     @PatchMapping("/{id}")
     @Operation(summary = "Обновление вещи")
     public ItemResponse update(@RequestHeader("X-Sharer-User-Id") long userId,
-                    @PathVariable long id,
-                    @Valid @RequestBody ItemUpdateRequest itemUpdateRequest) {
+                               @PathVariable long id,
+                               @Valid @RequestBody ItemUpdateRequest itemUpdateRequest) {
         return itemConverter.convert(
                 itemService.update(userId, id, itemConverter.convertUpdateRequestDto(itemUpdateRequest)));
     }
 
     /**
      * Поиск доступных вещей по наименованию или описанию.
+     *
      * @param userId идентификатор пользователя.
-     * @param text подстрока для регистронезависимого поиска.
+     * @param text   подстрока для регистронезависимого поиска.
      * @return список найденных доступных вещей.
      */
     @GetMapping("/search")
@@ -88,5 +91,13 @@ public class ItemController {
     public List<ItemResponse> search(@RequestHeader("X-Sharer-User-Id") long userId,
                                      @RequestParam String text) {
         return itemConverter.convert(itemService.findAvailableBySubstring(text));
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentResponse addComment(@RequestHeader("X-Sharer-User-Id") long userId,
+                                      @PathVariable long itemId,
+                                      @Valid @RequestBody CommentCreateRequest commentCreateRequest) {
+        return commentConverter.convert(
+                itemService.addComment(userId, itemId, commentConverter.convertCreateRequestDto(commentCreateRequest)));
     }
 }
