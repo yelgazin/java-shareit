@@ -10,7 +10,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
- * TODO Sprint add-bookings.
+ * Бронирование.
  */
 @Getter
 @Setter

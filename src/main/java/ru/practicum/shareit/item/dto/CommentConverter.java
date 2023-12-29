@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.dto;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import ru.practicum.shareit.common.dto.AbstractEntityConverter;
 import ru.practicum.shareit.item.Comment;
 
@@ -10,4 +11,7 @@ import ru.practicum.shareit.item.Comment;
 @Mapper(componentModel = "spring")
 public interface CommentConverter extends AbstractEntityConverter<Comment, CommentResponse, CommentCreateRequest,
         CommentUpdateRequest> {
+
+    @Mapping(source = "author.name", target = "authorName")
+    CommentResponse convert(Comment entity);
 }

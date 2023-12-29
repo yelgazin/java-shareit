@@ -18,6 +18,7 @@ import javax.validation.constraints.Email;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(description = "Параметры для редактирования пользователя")
 public class UserUpdateRequest {
+
     @Schema(description = "Имя пользователя", example = "Максим")
     String name;
 

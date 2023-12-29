@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(description = "Параметры бронирования для ответа")
 public class BookingResponse {
+
     @Schema(description = "Идентификатор бронирования", example = "1")
     Long id;
 

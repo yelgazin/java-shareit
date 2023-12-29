@@ -18,6 +18,7 @@ import javax.validation.constraints.NotNull;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(description = "Параметры для создания вещи")
 public class ItemCreateRequest {
+
     @NotBlank(message = "Наименование не может быть пустым.")
     @Schema(description = "Наименование вещи", example = "Ручная дрель")
     String name;

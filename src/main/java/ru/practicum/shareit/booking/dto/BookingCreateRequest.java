@@ -20,14 +20,17 @@ import java.time.LocalDateTime;
 @Schema(description = "Параметры для создания бронирования")
 public class BookingCreateRequest {
 
-    @NotNull
+    @NotNull(message = "Идентификатор вещи не может быть пустым.")
+    @Schema(description = "Идентификатор вещи.")
     Long itemId;
 
     @NotNull
-    @Future
+    @Future(message = "Дата начала бронирования должна быть больше текущей даты.")
+    @Schema(description = "Дата начала бронирования (включительно)", example = "2024-01-26T12:12:35")
     LocalDateTime start;
 
     @NotNull
-    @Future
+    @Future(message = "Дата окончания бронирования должна быть больше текущей даты.")
+    @Schema(description = "Дата окончания бронирования (включительно)", example = "2024-01-26T12:12:35")
     LocalDateTime end;
 }

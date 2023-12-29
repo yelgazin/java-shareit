@@ -16,6 +16,7 @@ import ru.practicum.shareit.booking.Booking;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(description = "Параметры для редактирования бронирования ")
 public class BookingUpdateRequest {
-    @Schema(description = "Доступность", example = "true")
+
+    @Schema(description = "Доступность бронирования", example = "true")
     Boolean available;
 }

@@ -1,17 +1,16 @@
 package ru.practicum.shareit.booking;
 
+import ru.practicum.shareit.booking.exception.UnsupportedStatusException;
+
 public enum StateFilter {
-    ALL, CURRENT, PAST, FUTURE, REJECTED;
+
+    ALL, CURRENT, PAST, FUTURE, WAITING, APPROVED, REJECTED;
 
     public static StateFilter parse(String value) {
-        for (StateFilter filter : StateFilter.values()) {
-            if (filter.name().equals(value)) {
-                return filter;
-            }
+        try {
+            return StateFilter.valueOf(value);
+        } catch (Exception ex) {
+            throw new UnsupportedStatusException("Unknown state: " + value);
         }
-
-        throw new UnsupportedStatusException(value);
-
-        //throw new IllegalStateException("Unknown state: " + value);
     }
 }

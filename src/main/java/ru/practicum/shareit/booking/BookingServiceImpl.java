@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.booking.exception.BookingException;
 import ru.practicum.shareit.common.exception.EntityNotFoundException;
 import ru.practicum.shareit.common.exception.ForbiddenException;
 import ru.practicum.shareit.item.Item;
@@ -20,7 +21,6 @@ import java.util.List;
 public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository bookingRepository;
-    private final BookingCopier bookingCopier;
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
 
@@ -31,7 +31,7 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new EntityNotFoundException("Бронирование с id %d не найдено.", id));
 
         if (!booking.getBooker().getId().equals(userId) &&
-            !booking.getItem().getOwner().getId().equals(userId)) {
+                !booking.getItem().getOwner().getId().equals(userId)) {
             throw new ForbiddenException("Только владелец вещи или автор бронирования может получать сведения " +
                     "о бронировании.");
         }
@@ -49,14 +49,23 @@ public class BookingServiceImpl implements BookingService {
         LocalDateTime time = LocalDateTime.now();
 
         switch (stateFilter) {
-            case ALL: return bookingRepository.findByBookerIdOrderByStartDesc(userId);
+            case ALL:
+                return bookingRepository.findByBookerIdOrderByStartDesc(userId);
             case CURRENT:
                 return bookingRepository.findByBookerIdAndStartLessThanEqualAndEndGreaterThanEqualOrderByStartDesc(
                         userId, time, time);
-            case PAST: return bookingRepository.findByBookerIdAndEndLessThanOrderByStartDesc(userId, time);
-            case FUTURE: return bookingRepository.findByBookerIdAndStartGreaterThanOrderByStartDesc(userId, time);
-            case REJECTED: return bookingRepository.findByBookerIdAndStatusIsOrderByStartDesc(userId, Status.REJECTED);
-            default: throw new NotImplementedException();
+            case PAST:
+                return bookingRepository.findByBookerIdAndEndLessThanOrderByStartDesc(userId, time);
+            case FUTURE:
+                return bookingRepository.findByBookerIdAndStartGreaterThanOrderByStartDesc(userId, time);
+            case REJECTED:
+                return bookingRepository.findByBookerIdAndStatusIsOrderByStartDesc(userId, Status.REJECTED);
+            case APPROVED:
+                return bookingRepository.findByBookerIdAndStatusIsOrderByStartDesc(userId, Status.APPROVED);
+            case WAITING:
+                return bookingRepository.findByBookerIdAndStatusIsOrderByStartDesc(userId, Status.WAITING);
+            default:
+                throw new NotImplementedException();
         }
     }
 
@@ -70,7 +79,8 @@ public class BookingServiceImpl implements BookingService {
         LocalDateTime time = LocalDateTime.now();
 
         switch (stateFilter) {
-            case ALL: return bookingRepository.findByItemOwnerIdOrderByStartDesc(userId);
+            case ALL:
+                return bookingRepository.findByItemOwnerIdOrderByStartDesc(userId);
             case CURRENT:
                 return bookingRepository.findByItemOwnerIdAndStartLessThanEqualAndEndGreaterThanEqualOrderByStartDesc(
                         userId, time, time);
@@ -80,7 +90,12 @@ public class BookingServiceImpl implements BookingService {
                 return bookingRepository.findByItemOwnerIdAndStartGreaterThanOrderByStartDesc(userId, time);
             case REJECTED:
                 return bookingRepository.findByItemOwnerIdAndStatusIsOrderByStartDesc(userId, Status.REJECTED);
-            default: throw new NotImplementedException();
+            case APPROVED:
+                return bookingRepository.findByItemOwnerIdAndStatusIsOrderByStartDesc(userId, Status.APPROVED);
+            case WAITING:
+                return bookingRepository.findByItemOwnerIdAndStatusIsOrderByStartDesc(userId, Status.WAITING);
+            default:
+                throw new NotImplementedException();
         }
     }
 
@@ -100,11 +115,11 @@ public class BookingServiceImpl implements BookingService {
         }
 
         if (item.getOwner().getId().equals(userId)) {
-            throw  new BookingException("Бронирование своих вещей не разрешено.");
+            throw new ForbiddenException("Бронирование своих вещей не разрешено.");
         }
 
         if (!booking.getEnd().isAfter(booking.getStart())) {
-            throw  new BookingException("Дата завершения бронирование должна быть позже даты начала.");
+            throw new BookingException("Дата завершения бронирование должна быть позже даты начала.");
         }
 
         booking.setBooker(booker);
@@ -112,17 +127,6 @@ public class BookingServiceImpl implements BookingService {
         booking.setStatus(Status.WAITING);
 
         return bookingRepository.save(booking);
-    }
-
-    @Override
-    public Booking update(long userId, long bookingId, Booking booking) {
-//        log.debug("Обновление пользователем {} вещи {}", userId, itemId);
-//        Booking savedBooking = bookingRepository.getById(bookingId)
-//                .orElseThrow(() -> new EntityNotFoundException("Бронирование с id %d не найдено.", bookingId));
-//        validateUpdate(userId, itemId, savedItem, item);
-//        bookingCopier.update(savedItem, item);
-//        return bookingRepository.update(bookingId, savedBooking);
-        return null;
     }
 
     @Override
@@ -140,17 +144,10 @@ public class BookingServiceImpl implements BookingService {
         }
 
         if (!booking.getStatus().equals(Status.WAITING)) {
-            throw new ForbiddenException("Только из состояние WAITING можно менять статус.");
+            throw new BookingException("Только из состояние WAITING можно менять статус.");
         }
 
         booking.setStatus(approve ? Status.APPROVED : Status.REJECTED);
         return bookingRepository.save(booking);
-    }
-
-    private void validateUpdate(long userId, long itemId, Item savedItem, Item newItem) {
-        log.debug("Валидация пользователем {} вещи {} при обновлении", userId, itemId);
-        if (!savedItem.getOwner().getId().equals(userId)) {
-            throw new ForbiddenException("Только владелец вещи может вносить изменения.");
-        }
     }
 }

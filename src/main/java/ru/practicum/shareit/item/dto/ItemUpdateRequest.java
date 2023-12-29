@@ -16,6 +16,7 @@ import ru.practicum.shareit.item.Item;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(description = "Параметры для редактирования вещи")
 public class ItemUpdateRequest {
+
     @Schema(description = "Наименование вещи", example = "Ручная дрель")
     String name;
 

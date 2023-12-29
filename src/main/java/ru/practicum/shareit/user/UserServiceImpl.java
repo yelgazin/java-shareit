@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User create(User user) {
         log.debug("Создание пользователя \"{}\"", user.getName());
-        // Не проверяем, т.к. тесты "требуют проверку" на уровне базы
+        // Не проверяем, т.к. тесты проверяют нумератор базы данных
         //validateCreate(user);
         return userRepository.save(user);
     }
@@ -43,8 +43,8 @@ public class UserServiceImpl implements UserService {
         User savedUser = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Пользователь с id %d не найден.", id));
 
-        // Не проверяем, т.к. тесты "требуют проверку" на уровне базы
-        //validateUpdate(id, user);
+        // Не проверяем, т.к. тесты проверяют нумератор базы данных
+        // validateUpdate(id, user);
         userCopier.update(savedUser, user);
         return userRepository.save(savedUser);
     }

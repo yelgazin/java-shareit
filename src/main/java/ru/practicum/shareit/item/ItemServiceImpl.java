@@ -7,6 +7,7 @@ import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.Status;
 import ru.practicum.shareit.common.exception.EntityNotFoundException;
 import ru.practicum.shareit.common.exception.ForbiddenException;
+import ru.practicum.shareit.item.exception.ItemException;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
@@ -22,11 +23,12 @@ public class ItemServiceImpl implements ItemService {
     private final ItemCopier itemCopier;
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
+    private final CommentRepository commentRepository;
 
     @Override
     public List<Item> getByUserId(long id) {
         log.debug("Получение списка вещей пользователя с id {}", id);
-        return itemRepository.getByOwnerId(id);
+        return itemRepository.getByOwnerIdOrderByIdAsc(id);
     }
 
     @Override
@@ -67,10 +69,10 @@ public class ItemServiceImpl implements ItemService {
         log.debug("Добавление комментария к вещи с id {}", itemId);
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("Пользователь с id %d не найден.", userId));
+                .orElseThrow(() -> new ItemException("Пользователь с id %d не найден.", userId));
 
         Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new EntityNotFoundException("Вещь с id %d не найдена.", itemId));
+                .orElseThrow(() -> new ItemException("Вещь с id %d не найдена.", itemId));
 
         LocalDateTime time = LocalDateTime.now();
 
@@ -78,13 +80,11 @@ public class ItemServiceImpl implements ItemService {
                 .stream()
                 .filter(booking -> booking.getItem().getId().equals(itemId))
                 .findAny()
-                .orElseThrow(() -> new ForbiddenException("Оставить отзыв можно только по арендованным вещам."));
+                .orElseThrow(() -> new ItemException("Оставить отзыв можно только по арендованным вещам."));
 
         comment.setAuthor(user);
         comment.setItem(item);
-        item.getComments().add(comment);
-
-        itemRepository.save(item);
+        commentRepository.save(comment);
 
         return comment;
     }

@@ -1,6 +1,5 @@
 package ru.practicum.shareit.common.exception;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
@@ -10,7 +9,7 @@ import org.springframework.http.HttpStatus;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RestException {
 
-    final String message;
+    final String error;
     final Throwable throwable;
     final HttpStatus httpStatus;
 }

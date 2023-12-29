@@ -12,7 +12,5 @@ public interface BookingService {
 
     Booking create(long userId, Booking booking);
 
-    Booking update(long userId, long bookingId, Booking booking);
-
     Booking setApproved(long userId, long bookingId, boolean approve);
 }

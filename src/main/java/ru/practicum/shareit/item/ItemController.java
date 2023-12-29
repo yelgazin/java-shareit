@@ -31,7 +31,7 @@ public class ItemController {
     @GetMapping
     @Operation(summary = "Получение списка вещей пользователя")
     public List<ItemResponse> getByUserId(@RequestHeader("X-Sharer-User-Id") long userId) {
-        return itemConverter.convert(itemService.getByUserId(userId));
+        return itemConverter.convert(itemService.getByUserId(userId), userId);
     }
 
     /**
@@ -44,7 +44,7 @@ public class ItemController {
     @GetMapping("/{id}")
     @Operation(summary = "Получение вещи по идентификатору")
     public ItemResponse getById(@RequestHeader("X-Sharer-User-Id") long userId, @PathVariable long id) {
-        return itemConverter.convert(itemService.getById(id));
+        return itemConverter.convert(itemService.getById(id), userId);
     }
 
     /**
@@ -59,7 +59,7 @@ public class ItemController {
     public ItemResponse create(@RequestHeader("X-Sharer-User-Id") long userId,
                                @Valid @RequestBody ItemCreateRequest itemCreateRequest) {
         return itemConverter.convert(
-                itemService.create(userId, itemConverter.convertCreateRequestDto(itemCreateRequest)));
+                itemService.create(userId, itemConverter.convertCreateRequestDto(itemCreateRequest)), userId);
     }
 
     /**
@@ -76,7 +76,7 @@ public class ItemController {
                                @PathVariable long id,
                                @Valid @RequestBody ItemUpdateRequest itemUpdateRequest) {
         return itemConverter.convert(
-                itemService.update(userId, id, itemConverter.convertUpdateRequestDto(itemUpdateRequest)));
+                itemService.update(userId, id, itemConverter.convertUpdateRequestDto(itemUpdateRequest)), userId);
     }
 
     /**
@@ -90,10 +90,18 @@ public class ItemController {
     @Operation(summary = "Поиск доступных вещей по наименованию или описанию")
     public List<ItemResponse> search(@RequestHeader("X-Sharer-User-Id") long userId,
                                      @RequestParam String text) {
-        return itemConverter.convert(itemService.findAvailableBySubstring(text));
+        return itemConverter.convert(itemService.findAvailableBySubstring(text), userId);
     }
 
+    /**
+     * Добавление комментария к вещи.
+     * @param userId идентификатор пользователя.
+     * @param itemId идентификатор вещи.
+     * @param commentCreateRequest параметры для комментария.
+     * @return созданный комментарий.
+     */
     @PostMapping("/{itemId}/comment")
+    @Operation(summary = "Добавление комментария к вещи")
     public CommentResponse addComment(@RequestHeader("X-Sharer-User-Id") long userId,
                                       @PathVariable long itemId,
                                       @Valid @RequestBody CommentCreateRequest commentCreateRequest) {
