@@ -1,9 +1,7 @@
 package ru.practicum.shareit.common.exception;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -84,11 +82,11 @@ public class RestExceptionHandler {
 
     //!!!!!!!!!!!!!!!1111
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public RestException handleRuntimeException(final RuntimeException exception) {
-        log.error("Внутренняя ошибка сервера. {}", exception.getMessage());
-        return new RestException("Произошла непредвиденная ошибка.", exception.getCause(),
-                HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+//    @ExceptionHandler
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    public RestException handleRuntimeException(final RuntimeException exception) {
+//        log.error("Внутренняя ошибка сервера. {}", exception.getMessage());
+//        return new RestException("Произошла непредвиденная ошибка.", exception.getCause(),
+//                HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
 }

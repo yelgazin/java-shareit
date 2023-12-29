@@ -1,6 +1,5 @@
 package ru.practicum.shareit.common.exception;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;

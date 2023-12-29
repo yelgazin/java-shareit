@@ -1,7 +1,7 @@
 package ru.practicum.shareit.booking;
 
 public enum StateFilter {
-    ALL, CURRENT, PAST, FUTURE, REJECTED;
+    ALL, CURRENT, PAST, FUTURE, WAITING, APPROVED, REJECTED;
 
     public static StateFilter parse(String value) {
         for (StateFilter filter : StateFilter.values()) {

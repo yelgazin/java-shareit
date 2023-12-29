@@ -22,6 +22,7 @@ public class ItemServiceImpl implements ItemService {
     private final ItemCopier itemCopier;
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
+    private final CommentRepository commentRepository;
 
     @Override
     public List<Item> getByUserId(long id) {
@@ -81,9 +82,10 @@ public class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new ForbiddenException("Оставить отзыв можно только по арендованным вещам."));
 
         comment.setAuthor(user);
-        comment.setItem(item);
+        //comment.setItem(item);
         item.getComments().add(comment);
 
+        commentRepository.save(comment);
         itemRepository.save(item);
 
         return comment;

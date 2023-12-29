@@ -56,6 +56,8 @@ public class BookingServiceImpl implements BookingService {
             case PAST: return bookingRepository.findByBookerIdAndEndLessThanOrderByStartDesc(userId, time);
             case FUTURE: return bookingRepository.findByBookerIdAndStartGreaterThanOrderByStartDesc(userId, time);
             case REJECTED: return bookingRepository.findByBookerIdAndStatusIsOrderByStartDesc(userId, Status.REJECTED);
+            case APPROVED: return bookingRepository.findByBookerIdAndStatusIsOrderByStartDesc(userId, Status.APPROVED);
+            case WAITING: return bookingRepository.findByBookerIdAndStatusIsOrderByStartDesc(userId, Status.WAITING);
             default: throw new NotImplementedException();
         }
     }
@@ -80,6 +82,10 @@ public class BookingServiceImpl implements BookingService {
                 return bookingRepository.findByItemOwnerIdAndStartGreaterThanOrderByStartDesc(userId, time);
             case REJECTED:
                 return bookingRepository.findByItemOwnerIdAndStatusIsOrderByStartDesc(userId, Status.REJECTED);
+            case APPROVED:
+                return bookingRepository.findByItemOwnerIdAndStatusIsOrderByStartDesc(userId, Status.APPROVED);
+            case WAITING:
+                return bookingRepository.findByItemOwnerIdAndStatusIsOrderByStartDesc(userId, Status.WAITING);
             default: throw new NotImplementedException();
         }
     }

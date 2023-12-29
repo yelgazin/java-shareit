@@ -5,7 +5,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.shareit.item.Comment;
 import ru.practicum.shareit.item.Item;
 
 import java.util.Set;
@@ -31,5 +30,16 @@ public class ItemResponse {
     Boolean available;
 
     @Schema(description = "Комментарии к вещи")
-    Set<Comment> comments;
+    Set<CommentResponse> comments;
+
+    BookingView nextBooking;
+    BookingView lastBooking;
+
+    @Getter
+    @Setter
+    @FieldDefaults(level = AccessLevel.PRIVATE)
+    public static class BookingView {
+        Long id;
+        Long bookerId;
+    }
 }
