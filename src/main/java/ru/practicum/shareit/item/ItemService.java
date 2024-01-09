@@ -3,6 +3,7 @@ package ru.practicum.shareit.item;
 import java.util.List;
 
 public interface ItemService {
+
     List<Item> getByUserId(long id);
 
     Item getById(long id);
@@ -12,4 +13,6 @@ public interface ItemService {
     Item update(long userId, long itemId, Item item);
 
     List<Item> findAvailableBySubstring(String text);
+
+    Comment addComment(long userId, long itemId, Comment comment);
 }

@@ -2,14 +2,16 @@ package ru.practicum.shareit.user.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.user.User;
 
 /**
  * Параметры ответа для {@link User}.
  */
-@Data
+@Getter
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(description = "Параметры пользователя для ответа")
 public class UserResponse {
