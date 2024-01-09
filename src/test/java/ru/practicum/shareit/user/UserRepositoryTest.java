@@ -26,7 +26,7 @@ class UserRepositoryTest {
         user.setEmail(email);
 
         userRepository.save(user);
-        Optional<User> actual= userRepository.getByEmail(email);
+        Optional<User> actual = userRepository.getByEmail(email);
         assertTrue(actual.isPresent());
         assertEquals("Иван", actual.get().getName());
         assertEquals(email, actual.get().getEmail());
