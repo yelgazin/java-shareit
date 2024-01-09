@@ -29,6 +29,6 @@ public class Comment extends AbstractEntity {
 
     String text;
 
-//    @ManyToOne
-//    Item item;
+    @ManyToOne
+    Item item;
 }
