@@ -8,6 +8,7 @@ import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.booking.Booking;
 
 import javax.validation.constraints.Future;
+import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -25,7 +26,7 @@ public class BookingCreateRequest {
     Long itemId;
 
     @NotNull
-    @Future(message = "Дата начала бронирования должна быть больше текущей даты.")
+    @FutureOrPresent(message = "Дата начала бронирования должна быть больше или равна текущей дате.")
     @Schema(description = "Дата начала бронирования (включительно)", example = "2024-01-26T12:12:35")
     LocalDateTime start;
 
