@@ -1,10 +1,12 @@
 package ru.practicum.shareit.user;
 
-import ru.practicum.shareit.common.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-public interface UserRepository extends Repository<User> {
+@Transactional(readOnly = true)
+public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> getByEmail(String email);
 }

@@ -8,7 +8,8 @@ import org.springframework.http.HttpStatus;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RestException {
-    final String message;
+
+    final String error;
     final Throwable throwable;
     final HttpStatus httpStatus;
 }
