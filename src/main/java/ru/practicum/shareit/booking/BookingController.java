@@ -4,22 +4,27 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingConverter;
 import ru.practicum.shareit.booking.dto.BookingCreateRequest;
 import ru.practicum.shareit.booking.dto.BookingResponse;
+import ru.practicum.shareit.common.AbstractController;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 /**
  * Контроллер для {@link Booking}.
  */
 @RestController
+@Validated
 @RequiredArgsConstructor
 @RequestMapping(path = "/bookings")
 @Tag(name = "Bookings", description = "Управление бронированиями")
-public class BookingController {
+public class BookingController extends AbstractController {
 
     private final BookingConverter bookingConverter;
     private final BookingService bookingService;
@@ -33,7 +38,7 @@ public class BookingController {
      */
     @PostMapping
     @Operation(summary = "Создание бронирования")
-    public BookingResponse create(@RequestHeader("X-Sharer-User-Id") long userId,
+    public BookingResponse create(@RequestHeader(USER_ID_HEADER) long userId,
                                   @Valid @RequestBody BookingCreateRequest bookingCreateRequest) {
         return bookingConverter.convert(
                 bookingService.create(userId, bookingConverter.convertCreateRequestDto(bookingCreateRequest)));
@@ -49,7 +54,7 @@ public class BookingController {
      */
     @PatchMapping("/{bookingId}")
     @Operation(summary = "Подтверждение или отклонение бронирования")
-    public BookingResponse approve(@RequestHeader("X-Sharer-User-Id") long userId,
+    public BookingResponse approve(@RequestHeader(USER_ID_HEADER) long userId,
                                    @PathVariable long bookingId,
                                    @RequestParam boolean approved) {
         return bookingConverter.convert(bookingService.setApproved(userId, bookingId, approved));
@@ -64,7 +69,7 @@ public class BookingController {
      */
     @GetMapping("/{bookingId}")
     @Operation(summary = "Получение бронирования по идентификатору")
-    public BookingResponse getById(@RequestHeader("X-Sharer-User-Id") long userId,
+    public BookingResponse getById(@RequestHeader(USER_ID_HEADER) long userId,
                                    @PathVariable long bookingId) {
         return bookingConverter.convert(bookingService.getById(userId, bookingId));
     }
@@ -74,13 +79,17 @@ public class BookingController {
      *
      * @param userId      идентификатор пользователя.
      * @param stateFilter фильтр отбора.
+     * @param from        индекс первого элемента.
+     * @param size        количество элементов для отображения.
      * @return найденные бронирования.
      */
     @GetMapping
     @Operation(summary = "Получение всех бронирований пользователя")
-    public List<BookingResponse> getByBookerId(@RequestHeader("X-Sharer-User-Id") long userId,
-                                               @RequestParam(value = "state", defaultValue = "ALL") String stateFilter) {
-        return bookingConverter.convert(bookingService.findByBookerId(userId, StateFilter.parse(stateFilter)));
+    public List<BookingResponse> getByBookerId(@RequestHeader(USER_ID_HEADER) long userId,
+                                               @RequestParam(value = "state", defaultValue = "ALL") StateFilter stateFilter,
+                                               @RequestParam(defaultValue = "0") @PositiveOrZero long from,
+                                               @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) @Positive int size) {
+        return bookingConverter.convert(bookingService.findByBookerId(userId, stateFilter, from, size));
     }
 
     /**
@@ -88,16 +97,20 @@ public class BookingController {
      *
      * @param userId      идентификатор пользователя.
      * @param stateFilter фильтр отбора.
+     * @param from        индекс первого элемента.
+     * @param size        количество элементов для отображения.
      * @return найденные бронирования.
      */
     @GetMapping("/owner")
     @Operation(summary = "Получение всех бронирований вещей владельца")
-    public List<BookingResponse> getByOwner(@RequestHeader("X-Sharer-User-Id") long userId,
+    public List<BookingResponse> getByOwner(@RequestHeader(USER_ID_HEADER) long userId,
                                             @Parameter(name = "фильтр отбора",
                                                     description = "Возможные значения " +
                                                             "ALL, CURRENT, PAST, FUTURE, " +
                                                             "WAITING, APPROVED, REJECTED")
-                                            @RequestParam(value = "state", defaultValue = "ALL") String stateFilter) {
-        return bookingConverter.convert(bookingService.findByItemOwner(userId, StateFilter.parse(stateFilter)));
+                                            @RequestParam(value = "state", defaultValue = "ALL") StateFilter stateFilter,
+                                            @RequestParam(defaultValue = "0") @PositiveOrZero long from,
+                                            @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) @Positive int size) {
+        return bookingConverter.convert(bookingService.findByItemOwner(userId, stateFilter, from, size));
     }
 }

@@ -3,6 +3,7 @@ package ru.practicum.shareit.item;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import ru.practicum.shareit.common.AbstractEntity;
@@ -17,10 +18,12 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
+@ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 public class Comment extends AbstractEntity {
 
+    @ToString.Exclude
     @ManyToOne
     User author;
 
@@ -29,6 +32,7 @@ public class Comment extends AbstractEntity {
 
     String text;
 
+    @ToString.Exclude
     @ManyToOne
     Item item;
 }

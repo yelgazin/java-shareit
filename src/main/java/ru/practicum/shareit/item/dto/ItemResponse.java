@@ -24,11 +24,14 @@ public class ItemResponse {
     @Schema(description = "Наименование вещи", example = "Ручная дрель")
     String name;
 
-    @Schema(description = "Описание вещий", example = "Ручная дрель со сменным аккумулятором")
+    @Schema(description = "Описание вещи", example = "Ручная дрель со сменным аккумулятором")
     String description;
 
     @Schema(description = "Доступность", example = "true")
     Boolean available;
+
+    @Schema(description = "Идентификатор запроса вещи")
+    Long requestId;
 
     @Schema(description = "Комментарии к вещи")
     Set<CommentResponse> comments;
