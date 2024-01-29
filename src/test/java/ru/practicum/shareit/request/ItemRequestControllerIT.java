@@ -113,7 +113,7 @@ class ItemRequestControllerIT {
     @Test
     void create_whenDescriptionIsNull_thenBadRequestReturned() {
         long userId = 1L;
-        //String errorMessage = "Описание не может быть пустым.";
+        String errorMessage = "Описание не может быть пустым.";
         itemRequestCreateRequest.setDescription(null);
 
         mockMvc.perform(post("/requests")
@@ -122,9 +122,8 @@ class ItemRequestControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .header("X-Sharer-User-Id", userId)
                         .content(objectMapper.writeValueAsString(itemRequestCreateRequest)))
-                .andExpect(status().isBadRequest()
-                        //.andExpect(status().reason(containsString(errorMessage))
-                );
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", Matchers.equalTo(errorMessage)));
 
         verify(itemRequestService, never()).create(anyLong(), any());
     }
@@ -133,7 +132,7 @@ class ItemRequestControllerIT {
     @Test
     void create_whenDescriptionIsBlank_thenBadRequestReturned() {
         long userId = 1L;
-        //String errorMessage = "Описание не может быть пустым.";
+        String errorMessage = "Описание не может быть пустым.";
         itemRequestCreateRequest.setDescription(" ");
 
         mockMvc.perform(post("/requests")
@@ -142,9 +141,8 @@ class ItemRequestControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .header("X-Sharer-User-Id", userId)
                         .content(objectMapper.writeValueAsString(itemRequestCreateRequest)))
-                .andExpect(status().isBadRequest()
-                        //.andExpect(status().reason(containsString(errorMessage))
-                );
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", Matchers.equalTo(errorMessage)));
 
         verify(itemRequestService, never()).create(anyLong(), any());
     }

@@ -77,10 +77,10 @@ public class ItemServiceImpl implements ItemService {
         log.debug("Добавление комментария к вещи с id {}", itemId);
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ItemException("Пользователь с id %d не найден.", userId));
+                .orElseThrow(() -> new EntityNotFoundException("Пользователь с id %d не найден.", userId));
 
         Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new ItemException("Вещь с id %d не найдена.", itemId));
+                .orElseThrow(() -> new EntityNotFoundException("Вещь с id %d не найдена.", itemId));
 
         LocalDateTime time = LocalDateTime.now();
 

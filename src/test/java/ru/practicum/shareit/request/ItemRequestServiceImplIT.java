@@ -76,8 +76,8 @@ class ItemRequestServiceImplIT {
 
     @Test
     void getByRequestId_whenRequestExists_thenItemRequestReturned() {
-        long userId = 1;
-        long requestId = 2;
+        long userId = author1.getId();
+        long requestId = itemRequest2.getId();
 
         ItemRequest foundItemRequest = itemRequestService.getByRequestId(userId, requestId);
 

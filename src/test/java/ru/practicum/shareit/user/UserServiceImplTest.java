@@ -144,7 +144,7 @@ class UserServiceImplTest {
         when(userRepository.save(user1))
                 .thenReturn(user1);
 
-        userService.update(userId, updateUser);
+        user1 = userService.update(userId, updateUser);
 
         assertThat(user1.getName(), not(equalTo(updateUser.getName())));
         assertThat(user1.getEmail(), equalTo(updateUser.getEmail()));

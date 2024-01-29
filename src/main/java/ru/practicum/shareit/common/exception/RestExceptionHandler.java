@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -33,9 +34,16 @@ public class RestExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public RestException handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-        String message = ex.getMessage();
+
+        String message = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .findFirst()
+                .map(FieldError::getDefaultMessage)
+                .orElse("Неизвестная ошибка при обработке параметра.");
+
         log.info(message);
-        return new RestException(message, ex.getCause(), HttpStatus.CONFLICT);
+        return new RestException(message, ex.getCause(), HttpStatus.BAD_REQUEST);
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)

@@ -261,7 +261,7 @@ class ItemControllerIT {
     @Test
     void create_whenNameIsNull_thenBadRequestReturned() {
         long userId = 1L;
-        //String errorMessage = "Имя не может быть пустым.";
+        String errorMessage = "Наименование не может быть пустым.";
         itemCreateRequest.setName(null);
 
         when(itemService.create(anyLong(), any()))
@@ -273,9 +273,8 @@ class ItemControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .header("X-Sharer-User-Id", userId)
                         .content(objectMapper.writeValueAsString(itemCreateRequest)))
-                .andExpect(status().isBadRequest()
-                        //.andExpect(status().reason(containsString(errorMessage))
-                );
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", Matchers.equalTo(errorMessage)));
 
         verify(itemService, never()).create(anyLong(), any());
     }
@@ -284,7 +283,7 @@ class ItemControllerIT {
     @Test
     void create_whenNameIsBlank_thenBadRequestReturned() {
         long userId = 1L;
-        //String errorMessage = "Имя не может быть пустым.";
+        String errorMessage = "Наименование не может быть пустым.";
         itemCreateRequest.setName(" ");
 
         when(itemService.create(anyLong(), any()))
@@ -296,9 +295,8 @@ class ItemControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .header("X-Sharer-User-Id", userId)
                         .content(objectMapper.writeValueAsString(itemCreateRequest)))
-                .andExpect(status().isBadRequest()
-                        //.andExpect(status().reason(containsString(errorMessage))
-                );
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", Matchers.equalTo(errorMessage)));
 
         verify(itemService, never()).create(anyLong(), any());
     }
@@ -307,7 +305,7 @@ class ItemControllerIT {
     @Test
     void create_whenDescriptionIsNull_thenBadRequestReturned() {
         long userId = 1L;
-        //String errorMessage = "Описание не может быть пустым.";
+        String errorMessage = "Описание не может быть пустым.";
         itemCreateRequest.setDescription(null);
 
         when(itemService.create(anyLong(), any()))
@@ -319,9 +317,8 @@ class ItemControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .header("X-Sharer-User-Id", userId)
                         .content(objectMapper.writeValueAsString(itemCreateRequest)))
-                .andExpect(status().isBadRequest()
-                        //.andExpect(status().reason(containsString(errorMessage))
-                );
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", Matchers.equalTo(errorMessage)));
 
         verify(itemService, never()).create(anyLong(), any());
     }
@@ -330,7 +327,7 @@ class ItemControllerIT {
     @Test
     void create_whenDescriptionIsBlank_thenBadRequestReturned() {
         long userId = 1L;
-        //String errorMessage = "Описание не может быть пустым.";
+        String errorMessage = "Описание не может быть пустым.";
         itemCreateRequest.setDescription(" ");
 
         when(itemService.create(anyLong(), any()))
@@ -342,9 +339,8 @@ class ItemControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .header("X-Sharer-User-Id", userId)
                         .content(objectMapper.writeValueAsString(itemCreateRequest)))
-                .andExpect(status().isBadRequest()
-                        //.andExpect(status().reason(containsString(errorMessage))
-                );
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", Matchers.equalTo(errorMessage)));
 
         verify(itemService, never()).create(anyLong(), any());
     }
@@ -353,7 +349,7 @@ class ItemControllerIT {
     @Test
     void create_whenAvailableIsNull_thenBadRequestReturned() {
         long userId = 1L;
-        //String errorMessage = "Признак доступности вещи не может быть пустым..";
+        String errorMessage = "Признак доступности вещи не может быть пустым.";
         itemCreateRequest.setAvailable(null);
 
         when(itemService.create(anyLong(), any()))
@@ -365,9 +361,8 @@ class ItemControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .header("X-Sharer-User-Id", userId)
                         .content(objectMapper.writeValueAsString(itemCreateRequest)))
-                .andExpect(status().isBadRequest()
-                        //.andExpect(status().reason(containsString(errorMessage))
-                );
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", Matchers.equalTo(errorMessage)));
 
         verify(itemService, never()).create(anyLong(), any());
     }
@@ -615,10 +610,9 @@ class ItemControllerIT {
         verify(itemService, never()).addComment(anyLong(), anyLong(), any());
     }
 
-    // TODO: Вынести в отдельный класс проверки.
     @SneakyThrows
     @Test
-    void addComment_whenItemNotExists_thenListOfItemReturned() {
+    void addComment_whenUserNotAllowedToLeaveComment_thenListOfItemReturned() {
         long userId = 1L;
         long itemId = 1L;
 

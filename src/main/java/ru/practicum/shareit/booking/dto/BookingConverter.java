@@ -18,9 +18,4 @@ public interface BookingConverter {
 
     @Mapping(source = "itemId", target = "item.id")
     Booking convertCreateRequestDto(BookingCreateRequest entityCreateRequestDto);
-
-//    @Mapping(source = "booker.id", target = "bookerId")
-//    ItemResponse.BookingView convert(Booking booking);
-    // Booking get all for user 1
-    // booker id is null.
 }

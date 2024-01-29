@@ -240,7 +240,7 @@ class ItemServiceImplTest {
     }
 
     @Test
-    void addComment_whenInvalidUserId_thenItemExceptionThrown() {
+    void addComment_whenInvalidUserId_thenEntityNotFoundThrown() {
         long userId = user.getId();
         long itemId = item.getId();
         booking.setItem(item);
@@ -248,12 +248,12 @@ class ItemServiceImplTest {
         when(userRepository.findById(userId))
                 .thenReturn(Optional.empty());
 
-        assertThrows(ItemException.class, () -> itemService.addComment(userId, itemId, comment));
+        assertThrows(EntityNotFoundException.class, () -> itemService.addComment(userId, itemId, comment));
         verify(commentRepository, never()).save(comment);
     }
 
     @Test
-    void addComment_whenItemId_thenItemExceptionThrown() {
+    void addComment_whenItemId_thenEntityNotFoundThrown() {
         long userId = user.getId();
         long itemId = item.getId();
         booking.setItem(item);
@@ -263,7 +263,7 @@ class ItemServiceImplTest {
         when(itemRepository.findById(itemId))
                 .thenReturn(Optional.empty());
 
-        assertThrows(ItemException.class, () -> itemService.addComment(userId, itemId, comment));
+        assertThrows(EntityNotFoundException.class, () -> itemService.addComment(userId, itemId, comment));
         verify(commentRepository, never()).save(comment);
     }
 
