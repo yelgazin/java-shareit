@@ -191,7 +191,7 @@ class UserControllerIT {
     @SneakyThrows
     @Test
     void create_whenEmailIsBlank_thenBadRequestReturned() {
-        String errorMessage = "Электронная почта не соответствует формату \"user@mail.ru\".";
+        String errorMessage = "Электронная почта не может быть пустой.";
         userCreateRequest1.setEmail(" ");
 
         mockMvc.perform(post("/users")
