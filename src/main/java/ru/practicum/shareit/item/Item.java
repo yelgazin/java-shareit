@@ -3,6 +3,7 @@ package ru.practicum.shareit.item;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.JoinFormula;
 import ru.practicum.shareit.booking.Booking;
@@ -21,9 +22,11 @@ import java.util.Set;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@ToString
 @Entity
 public class Item extends AbstractEntity {
 
+    @ToString.Exclude
     @ManyToOne
     User owner;
 
@@ -31,22 +34,27 @@ public class Item extends AbstractEntity {
     String description;
     Boolean available;
 
-    @OneToMany(mappedBy = "item")
-    private Set<Comment> comments;
+    Long requestId;
 
+    @ToString.Exclude
+    @OneToMany(mappedBy = "item")
+    Set<Comment> comments;
+
+    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinFormula("(SELECT b.id FROM booking b " +
             "WHERE b.item_id = id " +
             "AND b.start_time > LOCALTIMESTAMP(6) " +
             "AND b.status = 'APPROVED' " +
             "ORDER BY b.start_time ASC LIMIT 1)")
-    private Booking nextBooking;
+    Booking nextBooking;
 
+    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinFormula("(SELECT b.id FROM booking b " +
             "WHERE b.item_id = id " +
             "AND b.start_time < LOCALTIMESTAMP(6) " +
             "AND b.status = 'APPROVED' " +
             "ORDER BY b.start_time DESC LIMIT 1)")
-    private Booking lastBooking;
+    Booking lastBooking;
 }

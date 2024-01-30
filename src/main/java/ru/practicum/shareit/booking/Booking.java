@@ -14,13 +14,16 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
+@ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 public class Booking extends AbstractEntity {
 
+    @ToString.Exclude
     @ManyToOne
     User booker;
 
+    @ToString.Exclude
     @ManyToOne
     Item item;
 

@@ -3,7 +3,9 @@ package ru.practicum.shareit.booking;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.NotImplementedException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.exception.BookingException;
 import ru.practicum.shareit.common.exception.EntityNotFoundException;
 import ru.practicum.shareit.common.exception.ForbiddenException;
@@ -18,6 +20,7 @@ import java.util.List;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository bookingRepository;
@@ -40,65 +43,92 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<Booking> findByBookerId(long userId, StateFilter stateFilter) {
+    public List<Booking> findByBookerId(long userId, StateFilter stateFilter, long from, int size) {
         log.debug("Получение списка бронирований по id автора бронирования {} и фильтру {}", userId, stateFilter);
 
         userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("Пользователь с id %d не найден.", userId));
 
         LocalDateTime time = LocalDateTime.now();
+        PageRequest pageRequest = PageRequest.of((int) (from / size), size);
 
         switch (stateFilter) {
             case ALL:
-                return bookingRepository.findByBookerIdOrderByStartDesc(userId);
+                return bookingRepository.findByBookerIdOrderByStartDesc(userId, pageRequest).getContent();
             case CURRENT:
-                return bookingRepository.findByBookerIdAndStartLessThanEqualAndEndGreaterThanEqualOrderByStartDesc(
-                        userId, time, time);
+                return bookingRepository
+                        .findByBookerIdAndStartLessThanEqualAndEndGreaterThanEqualOrderByStartDesc(
+                                userId, time, time, pageRequest)
+                        .getContent();
             case PAST:
-                return bookingRepository.findByBookerIdAndEndLessThanOrderByStartDesc(userId, time);
+                return bookingRepository
+                        .findByBookerIdAndEndLessThanOrderByStartDesc(userId, time, pageRequest)
+                        .getContent();
             case FUTURE:
-                return bookingRepository.findByBookerIdAndStartGreaterThanOrderByStartDesc(userId, time);
+                return bookingRepository
+                        .findByBookerIdAndStartGreaterThanOrderByStartDesc(userId, time, pageRequest)
+                        .getContent();
             case REJECTED:
-                return bookingRepository.findByBookerIdAndStatusIsOrderByStartDesc(userId, Status.REJECTED);
+                return bookingRepository
+                        .findByBookerIdAndStatusIsOrderByStartDesc(userId, Status.REJECTED, pageRequest)
+                        .getContent();
             case APPROVED:
-                return bookingRepository.findByBookerIdAndStatusIsOrderByStartDesc(userId, Status.APPROVED);
+                return bookingRepository
+                        .findByBookerIdAndStatusIsOrderByStartDesc(userId, Status.APPROVED, pageRequest)
+                        .getContent();
             case WAITING:
-                return bookingRepository.findByBookerIdAndStatusIsOrderByStartDesc(userId, Status.WAITING);
+                return bookingRepository
+                        .findByBookerIdAndStatusIsOrderByStartDesc(userId, Status.WAITING, pageRequest)
+                        .getContent();
             default:
                 throw new NotImplementedException();
         }
     }
 
     @Override
-    public List<Booking> findByItemOwner(long userId, StateFilter stateFilter) {
+    public List<Booking> findByItemOwner(long userId, StateFilter stateFilter, long from, int size) {
         log.debug("Получение списка бронирований по id владельца вещи {} и фильтру {}", userId, stateFilter);
 
         userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("Пользователь с id %d не найден.", userId));
 
         LocalDateTime time = LocalDateTime.now();
+        PageRequest pageRequest = PageRequest.of((int) (from / size), size);
 
         switch (stateFilter) {
             case ALL:
-                return bookingRepository.findByItemOwnerIdOrderByStartDesc(userId);
+                return bookingRepository
+                        .findByItemOwnerIdOrderByStartDesc(userId, pageRequest).getContent();
             case CURRENT:
-                return bookingRepository.findByItemOwnerIdAndStartLessThanEqualAndEndGreaterThanEqualOrderByStartDesc(
-                        userId, time, time);
+                return bookingRepository
+                        .findByItemOwnerIdAndStartLessThanEqualAndEndGreaterThanEqualOrderByStartDesc(
+                                userId, time, time, pageRequest).getContent();
             case PAST:
-                return bookingRepository.findByItemOwnerIdAndEndLessThanOrderByStartDesc(userId, time);
+                return bookingRepository
+                        .findByItemOwnerIdAndEndLessThanOrderByStartDesc(userId, time, pageRequest)
+                        .getContent();
             case FUTURE:
-                return bookingRepository.findByItemOwnerIdAndStartGreaterThanOrderByStartDesc(userId, time);
+                return bookingRepository
+                        .findByItemOwnerIdAndStartGreaterThanOrderByStartDesc(userId, time, pageRequest)
+                        .getContent();
             case REJECTED:
-                return bookingRepository.findByItemOwnerIdAndStatusIsOrderByStartDesc(userId, Status.REJECTED);
+                return bookingRepository
+                        .findByItemOwnerIdAndStatusIsOrderByStartDesc(userId, Status.REJECTED, pageRequest)
+                        .getContent();
             case APPROVED:
-                return bookingRepository.findByItemOwnerIdAndStatusIsOrderByStartDesc(userId, Status.APPROVED);
+                return bookingRepository
+                        .findByItemOwnerIdAndStatusIsOrderByStartDesc(userId, Status.APPROVED, pageRequest)
+                        .getContent();
             case WAITING:
-                return bookingRepository.findByItemOwnerIdAndStatusIsOrderByStartDesc(userId, Status.WAITING);
+                return bookingRepository
+                        .findByItemOwnerIdAndStatusIsOrderByStartDesc(userId, Status.WAITING, pageRequest)
+                        .getContent();
             default:
                 throw new NotImplementedException();
         }
     }
 
+    @Transactional
     @Override
     public Booking create(long userId, Booking booking) {
         long itemId = booking.getItem().getId();
@@ -111,7 +141,7 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new EntityNotFoundException("Вещь с id %d не найдена.", itemId));
 
         if (!item.getAvailable()) {
-            throw new BookingException("Вещь не доступна для бронирования.");
+            throw new BookingException("Вещь %d не доступна для бронирования.", itemId);
         }
 
         if (item.getOwner().getId().equals(userId)) {
@@ -129,6 +159,7 @@ public class BookingServiceImpl implements BookingService {
         return bookingRepository.save(booking);
     }
 
+    @Transactional
     @Override
     public Booking setApproved(long userId, long bookingId, boolean approve) {
         log.debug("Обновление статуса бронирования с id {}", bookingId);

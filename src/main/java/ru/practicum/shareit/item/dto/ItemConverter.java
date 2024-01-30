@@ -32,8 +32,4 @@ public interface ItemConverter {
     Item convertCreateRequestDto(ItemCreateRequest entityCreateRequestDto);
 
     Item convertUpdateRequestDto(ItemUpdateRequest entityUpdateRequestDto);
-
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void update(@MappingTarget Item entity, Item updateEntity);
-
 }

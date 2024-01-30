@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface ItemService {
 
-    List<Item> getByUserId(long id);
+    List<Item> getByUserId(long id, long from, int size);
 
     Item getById(long id);
 
@@ -12,7 +12,7 @@ public interface ItemService {
 
     Item update(long userId, long itemId, Item item);
 
-    List<Item> findAvailableBySubstring(String text);
+    List<Item> findAvailableBySubstring(String text, long from, int size);
 
     Comment addComment(long userId, long itemId, Comment comment);
 }

@@ -22,7 +22,7 @@ public class UserUpdateRequest {
     @Schema(description = "Имя пользователя", example = "Максим")
     String name;
 
-    @Email(message = "Электронная почта не соответствует формату \"user@mail.ru\" .")
+    @Email(message = "Электронная почта не соответствует формату \"user@mail.ru\".")
     @Schema(description = "Электронная почта", example = "user@mail.com")
     String email;
 }

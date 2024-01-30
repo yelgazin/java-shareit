@@ -25,12 +25,12 @@ public class BookingCreateRequest {
     @Schema(description = "Идентификатор вещи.")
     Long itemId;
 
-    @NotNull
-    @FutureOrPresent(message = "Дата начала бронирования должна быть больше или равна текущей дате.")
+    @NotNull(message = "Дата начала бронирования не может быть пустой.")
+    @FutureOrPresent(message = "Дата начала бронирования должна быть больше или равна текущей даты.")
     @Schema(description = "Дата начала бронирования (включительно)", example = "2024-01-26T12:12:35")
     LocalDateTime start;
 
-    @NotNull
+    @NotNull(message = "Дата окончания бронирования не может быть пустой.")
     @Future(message = "Дата окончания бронирования должна быть больше текущей даты.")
     @Schema(description = "Дата окончания бронирования (включительно)", example = "2024-01-26T12:12:35")
     LocalDateTime end;

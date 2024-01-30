@@ -30,4 +30,7 @@ public class ItemCreateRequest {
     @NotNull(message = "Признак доступности вещи не может быть пустым.")
     @Schema(description = "Доступность", example = "true")
     Boolean available;
+
+    @Schema(description = "Идентификатор запроса вещи")
+    Long requestId;
 }

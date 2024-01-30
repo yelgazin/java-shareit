@@ -1,8 +1,5 @@
 package ru.practicum.shareit.common.dto;
 
-import org.mapstruct.BeanMapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValuePropertyMappingStrategy;
 import ru.practicum.shareit.common.AbstractEntity;
 
 import java.util.List;
@@ -22,7 +19,4 @@ public interface AbstractEntityConverter<T extends AbstractEntity, S, U, V> {
     T convertCreateRequestDto(U entityCreateRequestDto);
 
     T convertUpdateRequestDto(V entityUpdateRequestDto);
-
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void update(@MappingTarget T entity, T updateEntity);
 }

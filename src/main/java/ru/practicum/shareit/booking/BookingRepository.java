@@ -1,40 +1,49 @@
 package ru.practicum.shareit.booking;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Transactional(readOnly = true)
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
-    List<Booking> findByBookerIdOrderByStartDesc(long bookerId);
+    Page<Booking> findByBookerIdOrderByStartDesc(long bookerId, PageRequest pageRequest);
 
-    List<Booking> findByBookerIdAndStartLessThanEqualAndEndGreaterThanEqualOrderByStartDesc(long bookerId,
-                                                                            LocalDateTime greaterTime,
-                                                                            LocalDateTime lessTime);
+    Page<Booking> findByBookerIdAndStartLessThanEqualAndEndGreaterThanEqualOrderByStartDesc(long bookerId,
+                                                                                            LocalDateTime greaterTime,
+                                                                                            LocalDateTime lessTime,
+                                                                                            PageRequest pageRequest);
 
-    List<Booking> findByBookerIdAndEndLessThanOrderByStartDesc(long bookerId, LocalDateTime currentTime);
+    Page<Booking> findByBookerIdAndEndLessThanOrderByStartDesc(long bookerId, LocalDateTime currentTime,
+                                                               PageRequest pageRequest);
 
-    List<Booking> findByBookerIdAndStartGreaterThanOrderByStartDesc(long bookerId, LocalDateTime currentTime);
+    Page<Booking> findByBookerIdAndStartGreaterThanOrderByStartDesc(long bookerId, LocalDateTime currentTime,
+                                                                    PageRequest pageRequest);
 
     List<Booking> findByBookerIdAndStartLessThanAndStatusIsOrderByStartDesc(long bookerId, LocalDateTime currentTime,
                                                                             Status status);
 
-    List<Booking> findByBookerIdAndStatusIsOrderByStartDesc(long bookerId, Status status);
+    Page<Booking> findByBookerIdAndStatusIsOrderByStartDesc(long bookerId, Status status,
+                                                            PageRequest pageRequest);
 
-    List<Booking> findByItemOwnerIdOrderByStartDesc(long bookerId);
+    Page<Booking> findByItemOwnerIdOrderByStartDesc(long bookerId,
+                                                    PageRequest pageRequest);
 
-    List<Booking> findByItemOwnerIdAndStartLessThanEqualAndEndGreaterThanEqualOrderByStartDesc(long ownerId,
-                                                                                            LocalDateTime greaterTime,
-                                                                                            LocalDateTime lessTime);
+    Page<Booking> findByItemOwnerIdAndStartLessThanEqualAndEndGreaterThanEqualOrderByStartDesc(long ownerId,
+                                                                                               LocalDateTime greaterTime,
+                                                                                               LocalDateTime lessTime,
+                                                                                               PageRequest pageRequest);
 
-    List<Booking> findByItemOwnerIdAndEndLessThanOrderByStartDesc(long ownerId, LocalDateTime currentTime);
+    Page<Booking> findByItemOwnerIdAndEndLessThanOrderByStartDesc(long ownerId, LocalDateTime currentTime,
+                                                                  PageRequest pageRequest);
 
-    List<Booking> findByItemOwnerIdAndStartGreaterThanOrderByStartDesc(long ownerId, LocalDateTime currentTime);
+    Page<Booking> findByItemOwnerIdAndStartGreaterThanOrderByStartDesc(long ownerId, LocalDateTime currentTime,
+                                                                       PageRequest pageRequest);
 
-    List<Booking> findByItemOwnerIdAndStatusIsOrderByStartDesc(long ownerId, Status status);
+    Page<Booking> findByItemOwnerIdAndStatusIsOrderByStartDesc(long ownerId, Status status,
+                                                               PageRequest pageRequest);
 
-    List<Booking> findByItemId(long itemId);
+    Page<Booking> findByItemId(long itemId, PageRequest pageRequest);
 }

@@ -2,7 +2,9 @@ package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.Status;
 import ru.practicum.shareit.common.exception.EntityNotFoundException;
@@ -17,6 +19,7 @@ import java.util.List;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
@@ -26,9 +29,10 @@ public class ItemServiceImpl implements ItemService {
     private final CommentRepository commentRepository;
 
     @Override
-    public List<Item> getByUserId(long id) {
-        log.debug("Получение списка вещей пользователя с id {}", id);
-        return itemRepository.getByOwnerIdOrderByIdAsc(id);
+    public List<Item> getByUserId(long userId, long from, int size) {
+        log.debug("Получение списка вещей пользователя с id {}", userId);
+        PageRequest pageRequest = PageRequest.of((int) (from / size), size);
+        return itemRepository.getByOwnerIdOrderByIdAsc(userId, pageRequest).getContent();
     }
 
     @Override
@@ -38,6 +42,7 @@ public class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new EntityNotFoundException("Вещь с id %d не найдена.", id));
     }
 
+    @Transactional
     @Override
     public Item create(long userId, Item item) {
         log.debug("Создание пользователем {} вещи \"{}\"", userId, item.getName());
@@ -48,6 +53,7 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.save(item);
     }
 
+    @Transactional
     @Override
     public Item update(long userId, long itemId, Item item) {
         log.debug("Обновление пользователем {} вещи {}", userId, itemId);
@@ -59,20 +65,22 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> findAvailableBySubstring(String text) {
+    public List<Item> findAvailableBySubstring(String text, long from, int size) {
         log.debug("Поиск доступных вещей по подстроке \"{}\"", text);
-        return itemRepository.findAvailableBySubstring(text);
+        PageRequest pageRequest = PageRequest.of((int) (from / size), size);
+        return itemRepository.findAvailableBySubstring(text, pageRequest).getContent();
     }
 
+    @Transactional
     @Override
     public Comment addComment(long userId, long itemId, Comment comment) {
         log.debug("Добавление комментария к вещи с id {}", itemId);
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ItemException("Пользователь с id %d не найден.", userId));
+                .orElseThrow(() -> new EntityNotFoundException("Пользователь с id %d не найден.", userId));
 
         Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new ItemException("Вещь с id %d не найдена.", itemId));
+                .orElseThrow(() -> new EntityNotFoundException("Вещь с id %d не найдена.", itemId));
 
         LocalDateTime time = LocalDateTime.now();
 
