@@ -4,20 +4,22 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.server.booking.entity.Booking;
-import ru.practicum.shareit.server.booking.entity.StateFilter;
 import ru.practicum.shareit.server.booking.dto.BookingCreateRequest;
 import ru.practicum.shareit.server.booking.dto.BookingResponse;
-import ru.practicum.shareit.server.common.controller.Controller;
+import ru.practicum.shareit.server.booking.entity.Booking;
+import ru.practicum.shareit.server.booking.entity.StateFilter;
 
 import java.util.List;
+
+import static ru.practicum.shareit.server.config.RequestConstants.DEFAULT_PAGE_SIZE;
+import static ru.practicum.shareit.server.config.RequestConstants.USER_ID_HEADER;
 
 /**
  * Контроллер для {@link Booking}.
  */
 @RequestMapping(path = "/bookings")
 @Tag(name = "Bookings", description = "Управление бронированиями")
-public interface BookingController extends Controller {
+public interface BookingController {
 
     /**
      * Создание бронирования.

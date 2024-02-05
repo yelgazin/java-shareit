@@ -3,19 +3,21 @@ package ru.practicum.shareit.server.request.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.server.common.controller.Controller;
-import ru.practicum.shareit.server.request.entity.ItemRequest;
 import ru.practicum.shareit.server.request.dto.ItemRequestCreateRequest;
 import ru.practicum.shareit.server.request.dto.ItemRequestResponse;
+import ru.practicum.shareit.server.request.entity.ItemRequest;
 
 import java.util.List;
+
+import static ru.practicum.shareit.server.config.RequestConstants.DEFAULT_PAGE_SIZE;
+import static ru.practicum.shareit.server.config.RequestConstants.USER_ID_HEADER;
 
 /**
  * Контроллер для {@link ItemRequest}
  */
 @RequestMapping(path = "/requests")
 @Tag(name = "Requests", description = "Управление запросами на вещи")
-public interface ItemRequestController extends Controller {
+public interface ItemRequestController {
 
     /**
      * Создание запроса на вещь.

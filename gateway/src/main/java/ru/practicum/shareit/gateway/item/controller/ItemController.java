@@ -5,14 +5,16 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.gateway.common.controller.Controller;
-import ru.practicum.shareit.server.item.entity.Item;
 import ru.practicum.shareit.server.item.dto.CommentCreateRequest;
 import ru.practicum.shareit.server.item.dto.ItemCreateRequest;
 import ru.practicum.shareit.server.item.dto.ItemUpdateRequest;
+import ru.practicum.shareit.server.item.entity.Item;
 
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
+
+import static ru.practicum.shareit.gateway.config.RequestConstants.DEFAULT_PAGE_SIZE;
+import static ru.practicum.shareit.gateway.config.RequestConstants.USER_ID_HEADER;
 
 /**
  * Контроллер для {@link Item}.
@@ -20,7 +22,7 @@ import javax.validation.constraints.PositiveOrZero;
 @Validated
 @RequestMapping("/items")
 @Tag(name = "Items", description = "Управление вещами")
-public interface ItemController extends Controller {
+public interface ItemController {
 
     /**
      * Получение списка вещей пользователя (владельца).

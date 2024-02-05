@@ -3,18 +3,20 @@ package ru.practicum.shareit.server.item.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.server.common.controller.Controller;
-import ru.practicum.shareit.server.item.entity.Item;
 import ru.practicum.shareit.server.item.dto.*;
+import ru.practicum.shareit.server.item.entity.Item;
 
 import java.util.List;
+
+import static ru.practicum.shareit.server.config.RequestConstants.DEFAULT_PAGE_SIZE;
+import static ru.practicum.shareit.server.config.RequestConstants.USER_ID_HEADER;
 
 /**
  * Контроллер для {@link Item}.
  */
 @RequestMapping("/items")
 @Tag(name = "Items", description = "Управление вещами")
-public interface ItemController extends Controller {
+public interface ItemController {
 
     /**
      * Получение списка вещей пользователя (владельца).

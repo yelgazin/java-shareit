@@ -5,12 +5,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.gateway.common.controller.Controller;
-import ru.practicum.shareit.server.request.entity.ItemRequest;
 import ru.practicum.shareit.server.request.dto.ItemRequestCreateRequest;
+import ru.practicum.shareit.server.request.entity.ItemRequest;
 
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
+
+import static ru.practicum.shareit.gateway.config.RequestConstants.DEFAULT_PAGE_SIZE;
+import static ru.practicum.shareit.gateway.config.RequestConstants.USER_ID_HEADER;
 
 /**
  * Контроллер для {@link ItemRequest}
@@ -18,7 +20,7 @@ import javax.validation.constraints.PositiveOrZero;
 @Validated
 @RequestMapping(path = "/requests")
 @Tag(name = "Requests", description = "Управление запросами на вещи")
-public interface ItemRequestController extends Controller {
+public interface ItemRequestController {
 
     /**
      * Создание запроса на вещь.

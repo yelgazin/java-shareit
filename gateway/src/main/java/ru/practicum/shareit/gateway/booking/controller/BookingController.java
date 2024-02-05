@@ -6,13 +6,15 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.server.booking.dto.BookingCreateRequest;
 import ru.practicum.shareit.server.booking.entity.Booking;
 import ru.practicum.shareit.server.booking.entity.StateFilter;
-import ru.practicum.shareit.server.booking.dto.BookingCreateRequest;
-import ru.practicum.shareit.gateway.common.controller.Controller;
 
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
+
+import static ru.practicum.shareit.gateway.config.RequestConstants.DEFAULT_PAGE_SIZE;
+import static ru.practicum.shareit.gateway.config.RequestConstants.USER_ID_HEADER;
 
 /**
  * Контроллер для {@link Booking}.
@@ -20,7 +22,7 @@ import javax.validation.constraints.PositiveOrZero;
 @Validated
 @RequestMapping(path = "/bookings")
 @Tag(name = "Bookings", description = "Управление бронированиями")
-public interface BookingController extends Controller {
+public interface BookingController {
 
     /**
      * Создание бронирования.

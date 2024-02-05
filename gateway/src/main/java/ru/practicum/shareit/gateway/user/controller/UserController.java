@@ -5,10 +5,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.gateway.common.controller.Controller;
-import ru.practicum.shareit.server.user.entity.User;
 import ru.practicum.shareit.server.user.dto.UserCreateRequest;
 import ru.practicum.shareit.server.user.dto.UserUpdateRequest;
+import ru.practicum.shareit.server.user.entity.User;
 
 /**
  * Контроллер для {@link User}.
@@ -16,10 +15,11 @@ import ru.practicum.shareit.server.user.dto.UserUpdateRequest;
 @Validated
 @RequestMapping(path = "/users")
 @Tag(name = "Users", description = "Управление пользователями")
-public interface UserController extends Controller {
+public interface UserController {
 
     /**
      * Получение всех пользователей.
+     *
      * @return список пользователей.
      */
     @GetMapping
@@ -28,6 +28,7 @@ public interface UserController extends Controller {
 
     /**
      * Получение пользователя по идентификатору.
+     *
      * @param id идентификатор пользователя.
      * @return найденные пользователи.
      */
@@ -37,6 +38,7 @@ public interface UserController extends Controller {
 
     /**
      * Создание пользователя.
+     *
      * @param userCreateRequest параметры для создания пользователя.
      * @return созданный пользователь.
      */
@@ -46,7 +48,8 @@ public interface UserController extends Controller {
 
     /**
      * Обновление пользователя.
-     * @param id идентификатор пользователя.
+     *
+     * @param id                идентификатор пользователя.
      * @param userUpdateRequest параметры для изменения.
      * @return измененный пользователь.
      */
@@ -56,6 +59,7 @@ public interface UserController extends Controller {
 
     /**
      * Удаление пользователя.
+     *
      * @param id идентификатор пользователя.
      */
     @DeleteMapping("/{id}")
