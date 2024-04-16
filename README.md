@@ -1,2 +1,4 @@
-# java-shareit
-Template repository for Shareit project.
+# Backend REST service ShareIt
+## Cервис для шеринга вещей
+
+Сервис позволяет публиковать информацию о вещах, проводить поиск и брать в аренду на определенное время. 
